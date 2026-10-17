@@ -12,7 +12,9 @@
 * **会话课范例 2**：  
   ![会话课范例2-导入和正文](./images/session_demo2.png)
   ![会话课范例1-正文](./images/session_demo2.1.png)
-  ![会话课范例1-正文](./images/session_demo1.png)
+  ![会话课范例1-练习](./images/session_demo2.2.png)
+  ![会话课范例1-单词](./images/session_demo2.3.png)
+  ![会话课范例1-单词](./images/session_demo2.4.png)
 
 ---
 
