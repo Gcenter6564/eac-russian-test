@@ -1,6 +1,4 @@
-import pypandoc, os
-
-host_md = r"""# 言井俄语 B2 视频转述直播｜第二次试播脚本（主播版）
+言井俄语 B2 视频转述直播｜第二次试播脚本（主播版）
 
 **版本：** V1.0  
 
@@ -281,7 +279,7 @@ host_md = r"""# 言井俄语 B2 视频转述直播｜第二次试播脚本（主
 
 """
 
-staff_md = r"""# 言井俄语 B2 视频转述直播｜第二次试播工作人员配合脚本（内部版）
+言井俄语 B2 视频转述直播｜第二次试播工作人员配合脚本（内部版）
 
 **版本：** V1.0  
 
@@ -667,17 +665,3 @@ staff_md = r"""# 言井俄语 B2 视频转述直播｜第二次试播工作人�
 **最终判断标准：** 主播能否在不知道观众会说什么、是否连麦的情况下，持续推动直播自然进行。测试不以工作人员是否“配合成功”为标准，而以主播能否处理不同反馈为标准。
 
 """
-
-os.makedirs("/mnt/data", exist_ok=True)
-
-host_path = "/mnt/data/第二次试播脚本_主播版.md"
-
-staff_path = "/mnt/data/第二次试播配合脚本_工作人员内部版.md"
-
-pypandoc.convert_text(host_md, "md", format="md", outputfile=host_path, extra_args=["--standalone"])
-
-pypandoc.convert_text(staff_md, "md", format="md", outputfile=staff_path, extra_args=["--standalone"])
-
-print(host_path, os.path.getsize(host_path))
-
-print(staff_path, os.path.getsize(staff_path))
