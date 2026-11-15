@@ -1,3 +1,6 @@
+> **历史旧版｜已于2026-11-15被替代，请勿作为当前执行依据。**
+> 当前版本：[LiveStreaming_Compensation_and_Training_Policy_2026-11-15_confirmed.md](current/LiveStreaming_Compensation_and_Training_Policy_2026-11-15_confirmed.md)。本文保留作历史溯源，待用户清理；旧文内容未按新决定改写。
+
 # 言井俄语｜兼职俄语直播主播薪资及培训制度
 
 ## 一、薪资制度及基本原则
