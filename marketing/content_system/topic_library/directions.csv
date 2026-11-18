@@ -1,0 +1,2 @@
+direction_id,problem_id,shared_angle_id,angle,example_scene,historical_difference,standalone_rationale,review_result,matched_ids,review_reason,analysis_status,development_status,reuse_status,closure_reason,notes
+P001-D01,P001,G001,面对开放式提问，脑中有多件事可以分享，却不知道先选择哪一件开始表达。,朋友问“Что нового?”，主角无法决定先分享哪件近况。,首次入库方向，无其他已入库历史方向可比；聚焦开放式闲聊的起点选择，不扩展为所有卡壳的通用解释。,具体问题可以回答、开放式闲聊难以起步的对照，支持单独呈现一个可尝试的启动练习。,具有新价值,,首次建库的基线判断；库内无其他方向可匹配，不代表已完成库外历史内容的穷尽查重。,本期教学分析已形成；机制为可能解释，非普遍结论,已采用,开放,,后续仍可拓展；节目由episodes.csv的direction_id反向查询，不手工维护节目列表。
