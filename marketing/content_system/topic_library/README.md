@@ -1,107 +1,124 @@
-# 言井俄语选题库 V0.1
+# 言井俄语选题库 V0.2
 
-本库按“问题母题 → 内容方向 → 单集档案”保存《说不出俄语那点事儿》的选题与实际创作记录。母题描述可观察的表达障碍，方向确定一次内容切入角度，单集档案记录该期采用的分析、练习、故事与制作状态。
+## 用途与边界
 
-## 文件与关联
+本库按“问题母题 → 内容方向 → 实际节目索引”组织，另以全局共享讲解切入点建立横向关联。用途是持续积累值得开发的俄语表达问题、按可观察困难分类、管理不同切入方向、识别跨分类共享切入点、审查与历史内容的实质重合、判断独立制作价值，并记录方向已采用与后续可开发情况。
 
-- [problems.csv](problems.csv)：问题母题，主键 `problem_id`，如 P001。
-- [directions.csv](directions.csv)：内容方向，主键 `direction_id`，如 P001-D01；`problem_id` 关联母题，`linked_episodes` 关联单集。
-- [episodes/EP001.md](episodes/EP001.md)：单集档案，编号 EP001；明确记录关联母题与方向。
-- 同一母题可以对应多个内容方向，同一方向可以关联多期节目。母题长期保留，不因视频发布而删除；方向已采用不代表已用完。
+本库不承担视频制作档案库功能，不保存完整台本、分镜、视频素材、剪辑工程或制作交接材料。节目表只保存选题覆盖范围、练习与学习收获及可核实的进度摘要。
 
-## 分类边界
+## 当前文件与唯一数据来源
 
-一级分类暂定如下：
-
-| 一级编号 | 名称 |
+| 文件 | 职责 |
 | --- | --- |
-| A | 启动困难 |
-| B | 组织困难 |
-| C | 展开困难 |
-| D | 应变困难 |
+| [problems.csv](problems.csv) | 问题母题及可观察困难分类 |
+| [shared_angles.csv](shared_angles.csv) | 全局共享讲解切入点 |
+| [directions.csv](directions.csv) | 母题下的内容方向、共享关联、差异审查及开发／复用状态 |
+| [episodes.csv](episodes.csv) | 实际节目、关联方向、教学覆盖范围及进度 |
+| [TOPIC_TREE.md](TOPIC_TREE.md) | 从四张权威 CSV 自动生成的浏览视图 |
+| README.md | 编号、分类、维护、校验与生成规则 |
 
-目前确认的二级分类仅有 **A1：找不到表达起点**，归属 A。B、C、D 的完整二级分类尚未审定，不创建正式二级编号；后续未审定字段留空并在备注说明。
+节目通过 `episodes.direction_id` 关联方向；母题及共享切入点均从方向关联查询，不在节目表重复维护其外键。不在方向表保存手工节目列表，同一方向可关联多期节目。原详细 `episodes/EP001.md` 已移除，必要的教学覆盖与进度已迁入 CSV；旧版本可查 Git 历史。
 
-分类依据是可观察的表达障碍，不把推测原因直接写成分类结论。场景标签独立管理，不作为分类层级。例如“日常闲聊”和“开放式提问”可同时用于不同母题。
+## 分类、编号与关联含义
 
-## 数据与维护规则
+| 编号／字段 | 含义与约束 |
+| --- | --- |
+| A / B / C / D | 暂定一级困难分类：启动困难／组织困难／展开困难／应变困难 |
+| A1 | 唯一正式确认的二级分类：A 下的“找不到表达起点” |
+| P001 | 全库唯一问题母题 ID，数字独立递增；主分类挂靠一级／二级困难分类 |
+| P001-D01 | P001 下的内容方向；D01 在该母题内递增，每个方向必须关联一个主要母题 |
+| G001 | 全局共享切入点 ID，数字独立递增；连接跨母题或跨分类的实质相同讲解切入点 |
+| EP001 | 实际节目 ID，数字独立递增；不因策划完成而视为已经制作或发布 |
+| scene_tags | 独立场景标签，如日常闲聊、开放式提问；不构成分类层级 |
 
-1. CSV 使用 UTF-8、英文小写蛇形字段名和标准逗号分隔；包含逗号、引号或换行的字段按 CSV 规范引用。多场景标签、多关联单集均用 `|` 分隔。
-2. 编号保持唯一且稳定：母题 P001；方向 P001-D01（前缀须对应所属母题）；单集 EP001。新增前先检查编号及同义记录，禁止静默覆盖、删除或重复建库。
-3. 母题与方向状态分别记录。本次 P001 为“活跃”；P001-D01 为“已采用，后续仍可拓展”，不得标记为“已用完”。
-4. 原因分析和练习方法主要保存在具体 EP 档案中，不自动视为整个母题的通用教学结论。观察、可能机制与已验证结论须明确区分。
-5. 来源必须如实登记。P001 来源为“创作情境／教学分析示例”，不标注为真实学员个案。
-6. 单集的创作、制作、审核、发布与复盘状态分别核实。内容定稿或已录制不等于已发布；无可靠来源的日期、链接和数据留空或标记待核实。
-7. 本库只登记大型视频素材的文件名及后续核实的链接，不上传大型视频。本次素材与进度依据本次归档任务提供的信息登记，未核验实际视频文件。
-8. 每次维护检查：主键唯一、外键存在、方向编号前缀正确、方向与单集双向关联一致，以及分类、来源、发布状态是否准确。
+主链为 `A → A1 → P001 → P001-D01 → EP001`。G 编号不插入树形主链；它从方向横向关联。共享 G 不等于同一困难分类，也不等于节目重复。仅场景、举例或练习形式相同，不足以自动认定同一讲解切入点。
 
-## 初始记录
+B、C、D 的二级分类仍待审定，不为填充目录擅自编号。分类依据可观察表达困难，不能直接按使用场景、教学方法或推测原因归类。归属不清时相关分类字段留空、备注待审定并提醒用户，不静默重分类。
 
-P001 → P001-D01 → EP001。第一期内容及分镜基本定稿、真人素材已录制、制作交接说明已整理；实际制作、成片审核、发布时间和发布数据尚待核实，未标记为已发布。
+编号在各自命名空间内唯一、稳定，不因封存回收或重用。A1 下可以有多个母题，但同一个母题不在多个一级分类下重复创建。分类调整须先说明影响、保留历史映射并检查引用；不得静默改写历史 EP 的教学覆盖。
 
-## 编号、索引与跨栏目预留规则（V0.2 规划约定，尚未全部实施）
+## CSV 字段与维护约定
 
-> **实施状态提示：** 本文件前面的“文件与关联”“初始记录”描述的是当前 **V0.1 已实际入库** 的结构。以下是后续讨论确定的 V0.2 设计约定，**不表示** `shared_angles.csv`、`episodes.csv`、`TOPIC_TREE.md` 已经创建，也不表示旧的详细 EP 档案已经迁移。待 Work 完成结构调整并验收后，应同步修订前面的旧结构说明。
+统一使用 UTF-8、英文小写蛇形字段名、标准逗号分隔；包含逗号、引号或换行的值按 CSV 规范引用。多场景标签、多匹配编号或多发布链接用 `|` 分隔。未知字段留空或明确标注待核实；主键、主要母题及实际节目的方向外键不得缺失。未确认的共享切入点关联可留空，树中显示待确认。
 
-### 1. 各类编号分别表示什么
+- **problems.csv**：`problem_id` 为主键；`category_l1_code/name`、`category_l2_code/name` 为分类；`problem_description` 为可观察困难；另有 `scene_tags`、`source_type`、`problem_status`、`notes`。母题长期保留，不因视频发布删除。
+- **shared_angles.csv**：`shared_angle_id` 为主键；`shared_angle_name` 为名称；`explanation_focus` 说明核心讲解共同点；`scope_notes` 记录适用边界及限制。没有确认依据不自动新增正式 G 编号。
+- **directions.csv**：`direction_id` 为主键，`problem_id` 为必填主要母题外键，`shared_angle_id` 为可选共享外键；`angle`、`example_scene` 描述方向；`historical_difference`、`standalone_rationale` 记录历史差异与独立制作理由；`review_result`、`matched_ids`、`review_reason` 记录查重初判、匹配的已有 P／方向／G／EP 编号及理由；`analysis_status` 区分候选与已形成的本期分析；另含三个独立方向状态字段及 `notes`。
+- **episodes.csv**：`episode_id` 为主键，`series_name`、`title` 为栏目与标题，`direction_id` 为必填外键；`core_observation`、`core_explanation`、`explanation_limits`、`content_scope`、`exercise_summary`、`learning_takeaway` 支持教学内容查重；`workflow_status`、`progress_notes`、`publication_status`、`published_at`、`publication_links` 记录真实进度和待核实发布信息；`source_type` 说明依据。原因和练习是本期采用的分析，不自动推广为整个母题的通用教学结论。
 
-| 编号示例 | 类型 | 含义 | 管理规则 / 当前状态 |
-| --- | --- | --- | --- |
-| `A`、`B`、`C`、`D` | 一级困难分类 | 启动、组织、展开、应变困难 | 是**问题表现的分类代码**，不是场景、练习或视频编号；目前四类暂定 |
-| `A1` | 二级困难分类 | A 类下的“找不到表达起点” | **已确认**；B/C/D 的二级条目尚待审定，不得擅自编号 |
-| `P001` | 问题母题 ID（`problem_id`） | 一种可反复开发的具体表达困难 | **已入库**；主分类挂靠一级／二级分类，编号稳定、全库唯一 |
-| `P001-D01` | 母题下的内容方向 ID（`direction_id`） | P001 的第一个具体内容切入方向 | **已入库**；`D01` 是 P001 内部序号，不是全局第一方向 |
-| `G001` | 全局共享切入点 ID（`shared_angle_id`） | 把不同母题／不同分类下具有**实质相同讲解切入点**的方向联系起来 | **待 V0.2 实施**；不是二级分类、不代表视频重复，也不能仅因场景或练习相同就自动共用 |
-| `EP001` | 实际节目 ID（`episode_id`） | 第一期真实内容的使用索引 | **已有 EP001 记录**；未来计划用轻量 `episodes.csv` 代替详细制作档案 |
-| `scene_tags`（如“日常闲聊”） | 场景标签，无等级编号 | 困难发生的情境 | 与 A/B/C/D 独立，可跨母题复用；改变场景不自动新增母题或方向 |
+## 状态彼此独立
 
-**编号示范：** `A → A1 → P001 → P001-D01 → EP001` 表示从可观察的问题分类进入具体母题、内容方向，再关联已采用该方向的一期节目。`G001` **不插入这一条树形主链**：它是横向交叉索引，将多个方向连接起来。共享 `G` 编号需先说明核心讲解切入点的共同之处及各期差异。
+- 母题：`problem_status`，如活跃／归档；归档不删除母题或编号。
+- 方向开发：`development_status`，如候选／待论证／可开发／已采用／暂缓。
+- 方向复用：`reuse_status` 为开放／封存，封存必须填写 `closure_reason`。有新依据可重新开放，在备注保留原封存理由、重开依据和变更记录；重新开放后当前 `closure_reason` 留空，Git 历史保留原值。
+- 节目：`workflow_status` 独立反映每期已知制作进展；`publication_status`、日期及链接另外核实。策划、录制、交付、审核和发布不是同一节点。待核实不等于已确认未发布，也不得据此标为已发布。
 
-### 2. 编号创建与变更约束
+封存的是方向，不是节目制作进度；封存方向时，不批量修改历史节目的 `workflow_status`。树只显示“所属方向”状态。已采用不表示已用完，首次方向保持开放。
 
-1. 编号在各自命名空间内唯一、创建后原则上不更改、不回收、不因封存而重用；`P001`、`G001`、`EP001` 的数字各自独立递增，`P001-D01` 的 `D01` 在所属 P001 内递增。
-2. **分类编号不等于母题编号。** A1 下可以有多个不同 P 编号；同一个 P 可以有多个 `-Dxx` 方向；同一方向也可被多期 EP 使用。
-3. 跨一级、二级分类但表面相似的提案，先比较**可观察困难**；如共享核心讲解切入点，可通过同一个 G 编号横向关联，而非复制母题或把场景当分类。
-4. 分类调整应保留历史映射并检查引用，不得因重分类静默改写旧 EP 的历史教学内容。遇到归属不清时，暂留待审定并提示用户，不强行分入某类。
-5. 未获确认的新分类、新共享切入点或疑似同义母题，不能只因编号空缺就自动正式创建。
+## 新增方向前的跨分类查重
 
-### 3. 每次选题会必须执行的检索与差异审查
+先读取最新 GitHub 权威数据，不能只依赖标题、关键词、场景或聊天记忆。每次同时检索：
 
-应先读取**最新 GitHub 权威数据**，按以下顺序检查，而不是仅凭聊天记忆或标题判断：
+1. 相同或相近母题的可观察困难及其已有方向，区分场景变化与困难变化。
+2. 不同分类下的 G 共享切入点及关联方向，比较核心讲解共同点。
+3. 已有实际节目的核心解释、覆盖范围、练习及学习收获，并结合真实进度区别已规划内容与已确认发布内容。
 
-1. 搜索一级／二级困难表现与现有 P 母题；检查场景是否只是标签变化。
-2. 比对母题下已有方向 `Pxxx-Dxx`，并跨母题检查共享切入点 `Gxxx`（该表建成后）。
-3. 核对有关 EP **已经覆盖**的主要解释、教学动作和观众可获得的学习收获。
-4. 回答三个问题：**（a）困难或切入点有无实质差异？（b）能否提供此前未充分覆盖的教学价值？（c）为什么值得独立成片，而不只是旧内容的情境变体／补充？**
-5. 给出“高度重复／共享切入点但可能独立／具有新价值”的初步判断，标注关联的现有编号及判断依据；原因尚未研究的候选方向不提前确认为教学结论。
+逐项回答：是否有实质性表达困难或切入角度差异？能否提供此前未充分覆盖的教学价值？为什么值得独立制作，而不是作为旧内容的例子或补充？
 
-读取失败时必须明说**没有完成全库查重**，不可把猜测冒充检索结果。分类、共享关联和封存理由存在争议时，先提醒用户潜在影响，再进行变更。
+将“高度重复／共享切入点但可能独立／具有新价值”的初步判断写入 `review_result`，在 `matched_ids` 和 `review_reason` 留下匹配编号与依据，并填写历史差异及独立理由。尚未完成教学分析的候选方向在 `analysis_status` 标为待论证，不能把初判当成教学结论成立。首次基线无匹配可留空，但须说明检索边界。
 
-### 4. 状态彼此独立（待 V0.2 字段实现）
+读取失败必须明确说明没有完成全库查重。高度重复的提案先向用户解释重合与影响，不自动创建正式新方向；有实质差异的提案也须有证据，不能只因换了场景便认定新价值。
 
-- **问题母题：** `problem_status`，例如“活跃／归档”。
-- **内容方向：** `development_status`（例如“候选／待论证／可开发／已采用／暂缓”）与 `reuse_status`（“开放／封存”）分开；封存要填写 `closure_reason`，有新依据可重新开放。
-- **实际节目：** `workflow_status`（例如“策划中／台本定稿／制作中／待发布／已发布”），与方向是否封存无关。
+## 分类冲突处理
 
-**例：** 同一个方向关联 EP001 与日后的另一集时，只需把该方向的 `reuse_status` 改为“封存”，树形视图即可让两期都显示“所属方向已封存”；**不能**同时把两期的 `workflow_status` 改成“已发布”。视频制作状态必须按每期真实进展独立记录。
+新增或修改违反关系时，先提醒用户并说明影响，待消除疑义后操作。特别检查：把场景变化当成新困难；因相同练习错误合并不同困难；在多个一级分类重复建立同一母题；把方向封存写成历史节目状态变化；凭空创建未审定二级编号。分类、共享关联或封存理由存在争议时，保留待审定，不静默改变归属。
 
-### 5. 树状浏览与跨分类关联（待生成）
+## 当前首次归档
 
-计划从权威 CSV 自动生成 `TOPIC_TREE.md`，以 **一级 A/B/C/D → 二级 → P 母题 → 方向 → EP** 的方式展示；另提供 **G 共享切入点 → 对应多个方向与 EP** 的横向索引。树状视图是生成结果，不另行手工维护一套事实，以免与 CSV 不一致。
+实际记录仅有 P001、P001-D01、G001、EP001。P001 为 A／A1 下的启动困难，方向聚焦开放式问题下的话题与起点选择；G001 暂名“通过具体自我提问缩小表达任务”，当前只关联该方向，不虚构其他母题或节目。
 
-### 6. 商务俄语栏目的暂定边界
+EP001 保留：具体问题与开放式问题的观察对照；话题选择、起点规划和俄语组织可能共同形成负担的解释及限制；先选一件事、具体自我提问以尝试形成第一句话的练习。内容策划基本定稿、真人已录制；实际制作交付、成片审核及发布情况待核实，不标记为已发布。日期和发布链接留空。
 
-本选题库未来应允许不同栏目（包括商务俄语）共用问题母题及跨分类切入点的检索能力，但**商务俄语第一期尚未完成**，其工作任务分类、跨栏目去重、栏目编号与归档规则**全部待审定**。
+## 商务俄语栏目的暂定边界
 
-现阶段的约束仅有：
+预留不同栏目共用母题及共享切入点检索能力；商务俄语第一期完成后，再审定工作任务分类、跨栏目去重、栏目编号与归档规则。本次不建立商务栏目记录或未经确认的类别／字段。
 
-- 不把“商务会议／客户沟通”等**使用场景**直接当作 A/B/C/D 的**问题本质分类**。
-- 同一问题在不同栏目出现，不自动认定为重复；同一讲解策略也不自动认定值得另拍一期。
-- 不为未来商务栏目预设未经验证的类别或编号，不擅自把新商务题目塞进现有分类。
-- **在梳理商务俄语第一期之后**，集中评估它的沟通任务维度、与《说不出俄语那点事儿》的重合判定方式及是否需要新增字段，再更新 README 和数据结构。届时以明确审定的规则为准。
+“商务会议／客户沟通”等使用场景不能直接成为困难本质分类；同一问题跨栏目不自动重复，相同讲解策略也不自动值得另拍一期。不得擅自把新商务题目塞入现有分类。后续以明确审定的规则更新本库。
 
-### 7. 当前实际入库与未来规划的边界
+## 树状浏览、生成与核验
 
-**当前可直接引用的真实链条：** `A / A1 → P001 → P001-D01 → EP001`。EP001 的核心覆盖内容为：面对开放式提问，可能同时承担话题选择、表达起点规划与俄语组织任务；本期尝试通过选择一件事、再向自己提出具体问题来启动表达；**不能把它推广为 P001 所有方向的通用解释**。
+TOPIC_TREE.md 是四张 CSV 的派生视图，不人工维护第二份数据。两个入口分别为“一级 → 二级 → 母题 → 方向 → 节目”和“G → 关联母题／方向 → 节目”；只显示实际入库记录，缺失分类或共享关联显示待确认，不填充虚构节点。维护 CSV 后须重新生成，并与 CSV 一起提交。
 
-`G001`、新 CSV 表、树状索引、状态拆分和商务栏目规则仍属于**设计约定／待实施项**，在实际文件更新和核验前，不得称为已完成。
+在仓库根目录使用 Node.js 执行以下命令，可用同一生成逻辑重建视图（不需要安装依赖）：
+
+```sh
+node <<'JS'
+const fs = require("node:fs");
+const path = require("node:path");
+function parseCSV(s){let rows=[],row=[],cell="",q=false;for(let i=0;i<s.length;i++){let c=s[i];if(c==='"'){if(q&&s[i+1]==='"'){cell+='"';i++;}else q=!q;}else if(c===","&&!q){row.push(cell);cell="";}else if(c==="\n"&&!q){row.push(cell);rows.push(row);row=[];cell="";}else if(c!=="\r"||q)cell+=c;}if(q)throw Error("CSV引号未闭合");if(cell||row.length){row.push(cell);rows.push(row);}if(rows.some(r=>r.length!==rows[0].length))throw Error("CSV列数不一致");return rows.slice(1).map(r=>Object.fromEntries(r.map((v,i)=>[rows[0][i],v])));}
+function renderTree(t){
+ const sort=a=>[...a].sort((a,b)=>String(Object.values(a)[0]).localeCompare(String(Object.values(b)[0]),"en"));
+ const safe=s=>String(s||"待确认").replace(/\r?\n/g," ").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+ const line=(n,s)=>"  ".repeat(n)+"- "+s;
+ const epLines=(d,n)=>{const es=sort(t["episodes.csv"].filter(e=>e.direction_id===d.direction_id));return es.length?es.map(e=>line(n,`${safe(e.episode_id)}｜${safe(e.title)}｜制作：${safe(e.workflow_status)}｜发布：${safe(e.publication_status)}｜所属方向：${safe(d.reuse_status)}`)):[line(n,"暂无关联节目（不代表已制作）")];};
+ const dirLines=(d,n)=>[line(n,`${safe(d.direction_id)}｜${safe(d.angle)}｜开发：${safe(d.development_status)}｜复用：${safe(d.reuse_status)}｜共享切入点：${safe(d.shared_angle_id)}${d.closure_reason?"｜封存理由："+safe(d.closure_reason):""}`),...epLines(d,n+1)];
+ const out=["# 选题树 V0.2","","<!-- 自动生成：权威来源为 problems.csv、shared_angles.csv、directions.csv、episodes.csv。禁止手改；再生成方法见 README.md。 -->","","## 按问题分类",""];
+ const ps=sort(t["problems.csv"]),ds=sort(t["directions.csv"]),gs=sort(t["shared_angles.csv"]);
+ const l1s=[...new Set(ps.map(p=>p.category_l1_code))].sort();
+ for(const l1 of l1s){const group=ps.filter(p=>p.category_l1_code===l1);out.push(line(0,`${safe(l1)}｜${safe(group[0].category_l1_name)}`));
+ for(const l2 of [...new Set(group.map(p=>p.category_l2_code))].sort()){const sub=group.filter(p=>p.category_l2_code===l2);out.push(line(1,l2?`${safe(l2)}｜${safe(sub[0].category_l2_name)}`:"二级分类待审定"));
+ for(const p of sub){out.push(line(2,`${safe(p.problem_id)}｜${safe(p.problem_description)}｜${safe(p.problem_status)}`));const dirs=ds.filter(d=>d.problem_id===p.problem_id);for(const d of dirs)out.push(...dirLines(d,3));if(!dirs.length)out.push(line(3,"暂无内容方向"));}}}
+ out.push("","仅展示 CSV 中实际入库的分类和记录；其他一级类别暂无母题，未审定的二级分类不自动创建。","","## 按共享讲解切入点","");
+ for(const g of gs){out.push(line(0,`${safe(g.shared_angle_id)}｜${safe(g.shared_angle_name)}`));const dirs=ds.filter(d=>d.shared_angle_id===g.shared_angle_id);for(const pid of [...new Set(dirs.map(d=>d.problem_id))].sort()){const p=ps.find(p=>p.problem_id===pid);out.push(line(1,`${safe(pid)}｜${safe(p?.category_l1_code)}／${safe(p?.category_l2_code)}｜${safe(p?.problem_description)}`));for(const d of dirs.filter(d=>d.problem_id===pid))out.push(...dirLines(d,2));}if(!dirs.length)out.push(line(1,"暂无关联方向，待确认"));}
+ const unlinked=ds.filter(d=>!d.shared_angle_id);if(unlinked.length){out.push("","### 共享切入点关联待确认","");for(const d of unlinked)out.push(...dirLines(d,0));}
+ out.push("","共享 G 编号是横向关联，不改变母题分类，也不自动判定节目重复。","");
+ return out.join("\n");
+}
+const root = "marketing/content_system/topic_library";
+const names = ["problems.csv", "shared_angles.csv", "directions.csv", "episodes.csv"];
+const data = Object.fromEntries(names.map(name => [name, parseCSV(fs.readFileSync(path.join(root, name), "utf8"))]));
+fs.writeFileSync(path.join(root, "TOPIC_TREE.md"), renderTree(data), "utf8");
+JS
+```
+
+提交前验证 UTF-8 和字段、主键唯一、外键有效、方向编号前缀、分类合法、封存理由、制作与发布状态、树与 CSV 一致及变更范围。只修改本库，不覆盖课程、招聘或技术资料。
